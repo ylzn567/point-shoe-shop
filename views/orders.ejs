@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - Point Shoe Shop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+            background: #f7f0f3;
+            line-height: 1.6;
+            color: #2b2b2b;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Lucida Calligraphy', 'Segoe Script', 'Brush Script MT', cursive;
+            color: #2b2b2b;
+            margin: 30px 0 25px 0;
+            font-size: 2em;
+            border-bottom: 2px solid #d7c2cb;
+            padding-bottom: 10px;
+        }
+        .orders-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .form-error {
+            margin: 12px 0 0;
+            color: #7a2e3b;
+            background: #f7e6ec;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid #e4d3db;
+        }
+        .orders-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .order-card {
+            background: #ffffff;
+            border-left: 4px solid #9b6b7c;
+            padding: 22px;
+            border-radius: 8px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        .order-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.12);
+        }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        .order-id {
+            color: #2b2b2b;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+        .status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+            display: inline-block;
+        }
+        .pending {
+            background-color: #f5e8ee;
+            color: #7b5a66;
+        }
+        .approved {
+            background-color: #ece6ea;
+            color: #5f4f57;
+        }
+        .shipped {
+            background-color: #efe8ed;
+            color: #5a4a52;
+        }
+        .order-info {
+            display: grid;
+            gap: 10px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+        .info-value {
+            color: #333;
+            font-weight: 600;
+        }
+        .order-user {
+            margin-top: 8px;
+            color: #5a4a52;
+            font-size: 0.95em;
+        }
+        .total-price {
+            font-size: 1.2em;
+            color: #9b6b7c;
+            font-weight: 700;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #e4d3db;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 70px 40px;
+            background: #ffffff;
+            border-radius: 8px;
+            color: #6b6b6b;
+            font-size: 1.1em;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e4d3db;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/nav') %>
+    
+    <div class="container">
+        <div class="orders-title">
+            <h1><%= isAdmin ? 'All Orders' : 'My Orders' %></h1>
+        </div>
+        <% if (error) { %>
+            <div class="form-error"><%= error %></div>
+        <% } %>
+        
+        <% if (orders && orders.length > 0) { %>
+            <div class="orders-container">
+                <% orders.forEach(function(order) { %>
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="order-id">Order #<%= order._id.toString().substring(0, 8) %></span>
+                            <span class="status <%= order.status.toLowerCase() %>"><%= order.status %></span>
+                        </div>
+                        
+                        <div class="order-info">
+                            <div class="info-row">
+                                <span class="info-label">Date</span>
+                                <span class="info-value"><%= new Date(order.createdAt).toLocaleDateString('he-IL') %></span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Quantity</span>
+                                <span class="info-value"><%= order.totalQuantity || 0 %></span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Type</span>
+                                <span class="info-value"><%= order.orderType === 'custom' ? 'Custom' : 'Stock' %></span>
+                            </div>
+                        </div>
+
+                        <% if (isAdmin && order.userId && order.userId.firstName) { %>
+                            <div class="order-user">Ordered by: <%= order.userId.firstName %> <%= order.userId.lastName || '' %></div>
+                        <% } %>
+                        
+                        <div class="total-price">
+                            $<%= order.totalPrice.toFixed(2) %>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="empty-message">
+                No orders placed yet.
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>

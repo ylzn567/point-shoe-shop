@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Shoes - Point Shoe Shop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+            background-color: #f7f0f3;
+            line-height: 1.6;
+            color: #2b2b2b;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Lucida Calligraphy', 'Segoe Script', 'Brush Script MT', cursive;
+            color: #2b2b2b;
+            margin: 30px 0 20px 0;
+            font-size: 2.2em;
+            border-bottom: 2px solid #d7c2cb;
+            padding-bottom: 10px;
+        }
+        h2 {
+            font-family: 'Lucida Calligraphy', 'Segoe Script', 'Brush Script MT', cursive;
+            color: #2b2b2b;
+            margin-top: 10px;
+            font-size: 1.3em;
+        }
+        .form-section {
+            background: #ffffff;
+            border: 1px solid #e4d3db;
+            padding: 28px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+        }
+        form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        input, select, button {
+            padding: 12px 15px;
+            border: 1px solid #d7c2cb;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: all 0.2s ease;
+            background: #ffffff;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #9b6b7c;
+            box-shadow: 0 0 6px rgba(155, 107, 124, 0.2);
+        }
+        button {
+            background: #9b6b7c;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+            grid-column: 1 / -1;
+        }
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(155, 107, 124, 0.3);
+        }
+        .shoes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .shoe-card {
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e4d3db;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .shoe-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(214, 51, 132, 0.25);
+        }
+        .shoe-image {
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .shoe-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .shoe-card:hover .shoe-image img {
+            transform: scale(1.08);
+        }
+        .shoe-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .shoe-card h3 {
+            font-family: 'Lucida Calligraphy', 'Segoe Script', 'Brush Script MT', cursive;
+            color: #2b2b2b;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            flex-grow: 0;
+        }
+        .shoe-card p {
+            margin: 6px 0;
+            color: #666;
+            font-size: 0.95em;
+        }
+        .price {
+            font-size: 1.35em !important;
+            color: #9b6b7c !important;
+            font-weight: 700 !important;
+            margin: 10px 0 !important;
+        }
+        .description {
+            color: #888;
+            font-size: 0.9em;
+            margin: 10px 0 15px 0 !important;
+            flex-grow: 1;
+        }
+        .shoe-card a {
+            display: inline-block;
+            margin-top: auto;
+            padding: 10px 15px;
+            background: #9b6b7c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+            font-weight: 600;
+        }
+        .shoe-card a:hover {
+            background: #855a6a;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/nav') %>
+    
+    <div class="container">
+        <h1>Our Shoes</h1>
+        
+        <% if (isAdmin) { %>
+            <div class="form-section">
+                <h2>Add New Shoe</h2>
+                <form action="/shoes-view" method="POST">
+                    <input type="text" name="modelName" placeholder="Model Name" required>
+                    <select name="brand" required>
+                        <option value="">-- Select Brand --</option>
+                        <option value="Grishko">Grishko</option>
+                        <option value="Bloch">Bloch</option>
+                        <option value="Gaynor Minden">Gaynor Minden</option>
+                        <option value="Russian Pointe">Russian Pointe</option>
+                        <option value="Capezio">Capezio</option>
+                    </select>
+                        <input type="number" name="price" placeholder="Price" step="0.01" required>
+                        <input type="text" name="image" placeholder="Image URL">
+                        <input type="text" name="description" placeholder="Description">
+                        <button type="submit">Add Shoe</button>
+                    </form>
+                </div>
+            <% } %>
+        
+        <% if (shoes && shoes.length > 0) { %>
+            <div class="shoes-container">
+                <% shoes.forEach(function(shoe) { %>
+                    <div class="shoe-card">
+                        <div class="shoe-image">
+                            <img src="<%= shoe.image || 'https://placehold.co/400x600/efe3e9/2b2b2b?text=No+Image' %>" alt="<%= shoe.modelName %>">
+                        </div>
+                        <div class="shoe-content">
+                            <h3><%= shoe.modelName %></h3>
+                            <p><strong>Brand:</strong> <%= shoe.brand %></p>
+                            <p class="price">$<%= shoe.price.toFixed(2) %></p>
+                            <% if (shoe.description) { %>
+                                <p class="description"><%= shoe.description %></p>
+                            <% } %>
+                            <a href="/shoes-view/<%= shoe._id %>">View Details</a>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="empty-message">
+                No shoes available at the moment.
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>

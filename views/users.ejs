@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users - Point Shoe Shop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+            background-color: #f7f0f3;
+            line-height: 1.6;
+            color: #2b2b2b;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Lucida Calligraphy', 'Segoe Script', 'Brush Script MT', cursive;
+            color: #2b2b2b;
+            margin: 30px 0 25px 0;
+            font-size: 2em;
+            border-bottom: 2px solid #d7c2cb;
+            padding-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e4d3db;
+        }
+        th {
+            background: #f2e6ec;
+            color: #2b2b2b;
+            padding: 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1em;
+            border-bottom: 1px solid #e4d3db;
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        tbody tr {
+            transition: all 0.3s ease;
+        }
+        tbody tr:hover {
+            background-color: #f7edf2;
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        .badge-admin {
+            background: #9b6b7c;
+            color: white;
+        }
+        .badge-user {
+            background: #f1e2ea;
+            color: #2b2b2b;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 60px 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            color: #6b6b6b;
+            font-size: 1.1em;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e4d3db;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/nav') %>
+    
+    <div class="container">
+        <h1>Users</h1>
+        
+        <% if (users && users.length > 0) { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(function(user) { %>
+                        <tr>
+                            <td><strong><%= user.firstName %></strong></td>
+                            <td><strong><%= user.lastName %></strong></td>
+                            <td><%= user.email %></td>
+                            <td>
+                                <% if (user.isAdmin) { %>
+                                    <span class="badge badge-admin">Admin</span>
+                                <% } else { %>
+                                    <span class="badge badge-user">User</span>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <div class="empty-message">
+                No users found in the system.
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>

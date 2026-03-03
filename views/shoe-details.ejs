@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoe Details - Point Shoe Shop</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+            background-color: #f7f0f3;
+            color: #2b2b2b;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e4d3db;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .image {
+            background: #f2e6ec;
+            min-height: 420px;
+        }
+        .image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .content {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        h1 {
+            font-family: 'Lucida Calligraphy', 'Segoe Script', 'Brush Script MT', cursive;
+            color: #2b2b2b;
+            font-size: 2em;
+        }
+        .price {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #9b6b7c;
+        }
+        .meta {
+            color: #666;
+            font-size: 1em;
+        }
+        .order-section {
+            margin-top: 20px;
+            padding: 16px;
+            border: 1px solid #e4d3db;
+            border-radius: 8px;
+            background: #ffffff;
+        }
+        .order-form {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(180px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+        }
+        .checkbox-row {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+        .full-row {
+            grid-column: 1 / -1;
+        }
+        .order-form input,
+        .order-form select,
+        .order-form button {
+            padding: 10px 12px;
+            border: 1px solid #d7c2cb;
+            border-radius: 6px;
+            font-size: 0.95em;
+            height: 42px;
+        }
+        .order-form button {
+            background: #9b6b7c;
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .order-submit {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: flex-end;
+            grid-column: 1 / -1;
+        }
+        .order-quantity {
+            width: 90px;
+            height: 36px;
+            font-size: 0.9em;
+        }
+        .order-button {
+            height: 36px;
+            padding: 0 14px;
+            font-size: 0.9em;
+        }
+        @media (max-width: 800px) {
+            .order-form { grid-template-columns: 1fr; }
+        }
+        .back {
+            margin-top: 20px;
+            display: inline-block;
+            text-decoration: none;
+            background: #9b6b7c;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        @media (max-width: 800px) {
+            .card { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/nav') %>
+    <div class="container">
+        <div class="card">
+            <div class="image">
+                <img src="<%= shoe.image %>" alt="<%= shoe.modelName %>">
+            </div>
+            <div class="content">
+                <h1><%= shoe.modelName %></h1>
+                <div class="price">$<%= shoe.price.toFixed(2) %></div>
+                <div class="meta"><strong>Brand:</strong> <%= shoe.brand %></div>
+                <% if (shoe.description) { %>
+                    <div class="meta"><strong>Description:</strong> <%= shoe.description %></div>
+                <% } %>
+                <div class="order-section">
+                    <strong>Place Order</strong>
+                    <form class="order-form" action="/orders-view" method="POST">
+                        <input type="hidden" name="shoeId" value="<%= shoe._id %>">
+                        <select name="orderType" id="orderType" required>
+                            <option value="stock">Stock order</option>
+                            <option value="custom">Custom order</option>
+                        </select>
+                        <div class="full-row" id="stockFields">
+                            <div class="form-row">
+                                <input type="number" name="stockSize" placeholder="Size" min="1">
+                                <select name="stockWidth">
+                                    <option value="">Select width</option>
+                                    <option value="XX">XX</option>
+                                    <option value="X">X</option>
+                                    <option value="W">W</option>
+                                    <option value="M">M</option>
+                                    <option value="N">N</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="full-row" id="customFields">
+                            <div class="form-row">
+                                <input type="number" name="customSize" placeholder="Size" min="1">
+                                <select name="customWidth">
+                                    <option value="">Select width</option>
+                                    <option value="XX">XX</option>
+                                    <option value="X">X</option>
+                                    <option value="W">W</option>
+                                    <option value="M">M</option>
+                                    <option value="N">N</option>
+                                </select>
+                                <select name="customShank">
+                                    <option value="M">Shank M</option>
+                                    <option value="SS">Shank SS</option>
+                                    <option value="S">Shank S</option>
+                                    <option value="H">Shank H</option>
+                                    <option value="SH">Shank SH</option>
+                                </select>
+                            </div>
+                            <div class="checkbox-row full-row" style="margin-top: 8px;">
+                                <label><input type="checkbox" name="customAddRibbons"> Add ribbons</label>
+                                <label><input type="checkbox" name="customAddElastic"> Add elastic</label>
+                            </div>
+                        </div>
+                        <div class="order-submit">
+                            <input class="order-quantity" type="number" name="quantity" min="1" value="1" required>
+                            <button class="order-button" type="submit">Create Order</button>
+                        </div>
+                    </form>
+                </div>
+                <a class="back" href="/shoes-view">Back to Shoes</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        const orderType = document.getElementById('orderType');
+        const stockFields = document.getElementById('stockFields');
+        const customFields = document.getElementById('customFields');
+
+        const toggleFields = () => {
+            const isCustom = orderType.value === 'custom';
+            stockFields.style.display = isCustom ? 'none' : 'block';
+            customFields.style.display = isCustom ? 'block' : 'none';
+        };
+
+        toggleFields();
+        orderType.addEventListener('change', toggleFields);
+    </script>
+</body>
+</html>
