@@ -3,12 +3,9 @@ const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
-
 const connectDB = require('./db/connection');
-
-const orderRouter = require('./routers/orderRouter.js')
-const shoeRouter = require('./routers/shoeRouter.js')
-const userRouter = require('./routers/userRouter.js')
+const teacherRouter = require('./routers/teacherRouter.js')
+const studentRouter = require('./routers/studentRouter.js')
 const viewRouter = require('./routers/viewRouter.js')
 
 const app = express();
@@ -60,9 +57,9 @@ app.get('/', (req, res) => {
 });
 
 app.use(viewRouter);
-app.use('/api/orders', orderRouter);
-app.use('/api/shoes', shoeRouter);
-app.use('/api/users', userRouter);
+app.use('/api/teachers', teacherRouter);
+app.use('/api/students', studentRouter);
+//app.use('/api/users', userRouter);
 
 app.use((req, res, next) => {
     next({ status: 404, message: 'Route not found' });

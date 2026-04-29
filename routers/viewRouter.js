@@ -1,69 +1,33 @@
 const express = require('express');
 const router = express.Router();
 const {
-    renderShoes,
-    renderShoeDetails,
-    renderUsers,
-    renderOrdersPage,
-    registerUserView,
-    loginUserView,
-    createShoeView,
-    updateShoeView,
-    deleteShoeView,
-    createOrderView,
-    updateOrderView,
-    deleteOrderView
+    registerTeacherView,
+    createTeacherView,
+    teacherDashboard,
+    registerStudentView,
+    createStudentView,
+    loginTeacherView,
+    loginTeacher
 } = require('../controllers/viewController');
-const { updateUser, deleteUser } = require('../controllers/userController');
-const { requireAdmin, validateShoeId, validateUserId } = require('./middleware');
 
 // Async error handler
 const asyncHandler = (fn) => (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(next);
 };
 
-router.get('/register', (req, res) => {
-    res.render('register', { error: null, success: false });
-});
+// Teacher registration routes
+router.get('/register-teacher', registerTeacherView);
+router.post('/register-teacher', asyncHandler(createTeacherView));
 
-router.post('/register', asyncHandler(registerUserView));
+// Teacher dashboard route
+router.get('/teacher-dashboard/:id', asyncHandler(teacherDashboard));
 
-router.get('/login', (req, res) => {
-    res.render('login', { error: null });
-});
+// Student registration routes
+router.get('/register-student', registerStudentView);
+router.post('/register-student', asyncHandler(createStudentView));
 
-router.post('/login', asyncHandler(loginUserView));
-
-router.get('/shoes-view', asyncHandler(renderShoes));
-
-router.get('/shoes-view/:id', validateShoeId, asyncHandler(renderShoeDetails));
-
-router.post('/shoes-view', requireAdmin, asyncHandler(createShoeView));
-
-router.put('/shoes-view/:id', requireAdmin, validateShoeId, asyncHandler(updateShoeView));
-
-router.delete('/shoes-view/:id', requireAdmin, validateShoeId, asyncHandler(deleteShoeView));
-
-router.get('/users-view', requireAdmin, asyncHandler(renderUsers));
-
-router.put('/users-view/:id', requireAdmin, validateUserId, asyncHandler(updateUser));
-
-router.delete('/users-view/:id', requireAdmin, validateUserId, asyncHandler(deleteUser));
-
-router.get('/orders-view', (req, res, next) => {
-    renderOrdersPage(req, res).catch(err => {
-        res.status(500).render('error', { 
-            status: 500, 
-            message: 'Failed to load orders', 
-            details: err.message 
-        });
-    });
-});
-
-router.post('/orders-view', asyncHandler(createOrderView));
-
-router.put('/orders-view/:id', asyncHandler(updateOrderView));
-
-router.delete('/orders-view/:id', asyncHandler(deleteOrderView));
+// Teacher login routes
+router.get('/login-teacher', loginTeacherView);
+router.post('/login-teacher', asyncHandler(loginTeacher));
 
 module.exports = router;

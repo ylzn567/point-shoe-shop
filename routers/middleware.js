@@ -1,10 +1,10 @@
 const User = require('../models/User');
-const Shoe = require('../models/Shoe');
-const Order = require('../models/Order');
+const Teacher = require('../models/Teacher');
+const Student = require('../models/Students');
 
 const validateUserId = async (req, res, next) => {
     try {
-        const user = await User.findById(req.params.id);
+        const user = await User.findOne({ idNumber: req.params.id });
         if (!user) {
             return next({ status: 404, message: 'User not found' });
         }
@@ -15,26 +15,26 @@ const validateUserId = async (req, res, next) => {
     }
 };
 
-const validateShoeId = async (req, res, next) => {
+const validateTeacherId = async (req, res, next) => {
     try {
-        const shoe = await Shoe.findById(req.params.id);
-        if (!shoe) {
-            return next({ status: 404, message: 'Shoe not found' });
+        const teacher = await Teacher.findOne({ idNumber: req.params.id });
+        if (!teacher) {
+            return next({ status: 404, message: 'Teacher not found' });
         }
-        req.shoe = shoe;
+        req.teacher = teacher;
         next();
     } catch (err) {
         next({ status: 500, message: err.message });
     }
 };
 
-const validateOrderId = async (req, res, next) => {
+const validateStudentId = async (req, res, next) => {
     try {
-        const order = await Order.findById(req.params.id);
-        if (!order) {
-            return next({ status: 404, message: 'Order not found' });
+        const student = await Student.findOne({ idNumber: req.params.id });
+        if (!student) {
+            return next({ status: 404, message: 'Student not found' });
         }
-        req.order = order;
+        req.student = student;
         next();
     } catch (err) {
         next({ status: 500, message: err.message });
@@ -60,8 +60,8 @@ const requireAdmin = (req, res, next) => {
 
 module.exports = {
     validateUserId,
-    validateShoeId,
-    validateOrderId,
+    validateTeacherId,  
+    validateStudentId,
     authenticateToken,
     requireAdmin
 };
